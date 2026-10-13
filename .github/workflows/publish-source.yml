@@ -30,16 +30,15 @@ jobs:
           assert os.environ['GITHUB_REPOSITORY']==REPO and os.environ['GITHUB_ACTOR']=='TBK-10000'
           head=api('/git/ref/heads/main')['object']['sha']
           assert head==os.environ['GITHUB_SHA']
-          assert api('/git/commits/'+head)['parents'][0]['sha']==PREPARED
-          assert api('/git/commits/'+PREPARED)['parents'][0]['sha']==PARENT
+          assert api('/git/commits/'+head)['parents'][0]['sha']=='ff177ba50d8f87725939e2fdc51b749b20ca206c'
           assert api('/git/ref/tags/v3.0.2')['object']['sha']==PARENT
           assert api('/git/ref/tags/v3.0.5',missing=True) is None
           files=[x for x in api('/git/trees/'+TREE+'?recursive=1')['tree'] if x['type']=='blob']
           assert len(files)==47 and not any(x['path'].startswith(('verification/','artifacts/')) or x['path'].endswith('TEST-REPORT.md') for x in files)
-          created=api('/git/commits','POST',{'message':'Release 3.0.5','tree':TREE,'parents':[PARENT],'author':{'name':'TBK-10000','email':EMAIL},'committer':{'name':'TBK-10000','email':EMAIL}})
+          created=api('/git/commits','POST',{'message':'Release 3.0.5','tree':TREE,'parents':[head],'author':{'name':'TBK-10000','email':EMAIL},'committer':{'name':'TBK-10000','email':EMAIL}})
           assert created['author']['email']==EMAIL and created['committer']['email']==EMAIL
           assert api('/git/ref/heads/main')['object']['sha']==head
-          api('/git/refs/heads/main','PATCH',{'sha':created['sha'],'force':True})
+          api('/git/refs/heads/main','PATCH',{'sha':created['sha'],'force':False})
           api('/git/refs','POST',{'ref':'refs/tags/v3.0.5','sha':created['sha']})
           assert api('/git/ref/heads/main')['object']['sha']==created['sha']
           assert api('/git/ref/tags/v3.0.2')['object']['sha']==PARENT
