@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "TBK Twitch Ambilight",
+  "version": "3.0.2",
+  "description": "Подсветка Twitch с настройками внутри плеера. Отдельная модульная версия TBK.",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.twitch.tv/*",
+        "https://twitch.tv/*",
+        "https://player.twitch.tv/*",
+        "https://clips.twitch.tv/*"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle",
+      "js": [
+        "src/settings.js",
+        "src/player.js",
+        "src/vendor/projector-2d.js",
+        "src/renderers.js",
+        "src/effects.js",
+        "src/chat.js",
+        "src/windows.js",
+        "src/foreground.js",
+        "src/edge.js",
+        "src/engine.js",
+        "src/credits.js",
+        "src/ui.js",
+        "src/main.js"
+      ],
+      "css": [
+        "style.css"
+      ]
+    }
+  ],
+  "author": "TheBigKotovski (TBK)",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

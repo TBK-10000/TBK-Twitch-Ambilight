@@ -1,0 +1,57 @@
+.tbk-ambilight-glow {position:fixed!important;pointer-events:none!important;z-index:9!important;contain:layout style;isolation:isolate;}
+.tbk-ambilight-glow[hidden]{display:none!important}
+.tbk-ambilight-glow canvas{position:absolute!important;pointer-events:none!important;max-width:none!important;max-height:none!important;}
+.tbk-ambilight-gear{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;width:34px!important;height:32px!important;padding:6px!important;border:0!important;border-radius:5px!important;background:transparent!important;color:white!important;cursor:pointer!important;}
+.tbk-ambilight-gear svg{width:21px!important;height:21px!important;fill:currentColor!important;pointer-events:none!important}
+.tbk-ambilight-gear:hover,.tbk-ambilight-gear:focus-visible{background:#ffffff35!important;outline:2px solid #b9a1e5!important;}
+.tbk-ambilight-gear[data-fallback]{position:absolute!important;right:12px!important;bottom:48px!important;z-index:100!important;background:#18181bcc!important;}
+.tbk-ambilight-ui{position:absolute!important;inset:0!important;pointer-events:none!important;z-index:100!important;display:block!important;}
+/* The backdrop alone is translucent/blurred; chat content stays opaque and sharp. */
+.tbk-chat-root{isolation:isolate!important;background:transparent!important;}
+.tbk-chat-position{position:relative!important;}
+.tbk-chat-root .tbk-chat-surface{background-color:transparent!important;background-image:none!important;}
+.tbk-chat-backdrop{position:absolute!important;inset:0!important;overflow:hidden!important;pointer-events:none!important;z-index:-1!important;contain:strict;}
+.tbk-chat-backdrop canvas{position:absolute!important;left:-15%!important;top:-15%!important;width:130%!important;height:130%!important;max-width:none!important;max-height:none!important;}
+.tbk-chat-tint,.tbk-chat-grain{position:absolute!important;inset:0!important;pointer-events:none!important;}
+.tbk-chat-grain{background-repeat:repeat!important;}
+/* Native text/buttons are painted over this negative local background layer. */
+.tbk-foreground-surface{isolation:isolate!important;}
+.tbk-foreground-position{position:relative!important;}
+.tbk-foreground-light{position:absolute!important;inset:0!important;z-index:-1!important;overflow:hidden!important;pointer-events:none!important;contain:strict;}
+.tbk-foreground-light[hidden]{display:none!important}
+.tbk-foreground-light canvas{position:absolute!important;max-width:none!important;max-height:none!important;pointer-events:none!important;}
+
+.tbk-foreground-surface .tbk-foreground-clear{background-color:transparent!important;}
+
+/* Header cards share the same backdrop; foreground opacity and filters stay native. */
+.tbk-chat-root .tbk-chat-widget-surface{background-color:transparent!important;}
+.tbk-chat-root .tbk-chat-widget-root,.tbk-chat-root .tbk-chat-widget-root .tbk-chat-widget-surface{color:var(--tbk-chat-text)!important;}
+.tbk-chat-root .tbk-chat-widget-root [data-test-selector="leaderboard-item-name-test-selector"]{--color-text-base:var(--tbk-chat-text);}
+
+/* Ambient light is a sibling of the fading controls, below their native gradient. */
+.tbk-controls-host-position{position:relative!important;}
+.tbk-controls-stable-host{isolation:isolate!important;}
+.tbk-controls-light{z-index:1!important;}
+.tbk-controls-native-overlay{z-index:2!important;}
+.tbk-controls-over-light{z-index:1!important;}
+.tbk-controls-active{background-color:transparent!important;}
+
+.tbk-quick-controls{display:inline-flex!important;align-items:center!important;gap:5px!important;flex-shrink:0!important;height:32px!important;margin:0 3px!important;}
+.tbk-quick-controls[data-fallback]{position:absolute!important;right:12px!important;bottom:48px!important;z-index:100!important;background:#18181be6!important;border-radius:6px!important;padding:0 4px!important;}
+.tbk-quick-controls .tbk-ambilight-gear{position:static!important;background:transparent!important;}
+.tbk-ambilight-gear svg{fill:none!important;}
+.tbk-power-switch{position:relative!important;width:57px!important;height:25px!important;min-width:57px!important;padding:0!important;border:1px solid #d8d8dd!important;border-radius:20px!important;background:#a83540!important;color:#fff!important;cursor:pointer!important;font:600 10px/23px system-ui!important;box-sizing:border-box!important;}
+.tbk-power-switch[aria-checked=true]{background:#25804b!important;}
+.tbk-switch-thumb{position:absolute!important;width:19px!important;height:19px!important;top:2px!important;left:3px!important;background:#efeff1!important;border-radius:50%!important;pointer-events:none!important;transition:transform .15s!important;}
+.tbk-power-switch[aria-checked=true] .tbk-switch-thumb{transform:translateX(29px)!important;}
+.tbk-switch-label{position:absolute!important;right:6px!important;top:0!important;height:23px!important;line-height:23px!important;pointer-events:none!important;}
+.tbk-power-switch[aria-checked=true] .tbk-switch-label{right:auto!important;left:7px!important;}
+.tbk-power-switch:focus-visible{outline:2px solid #c2a4f5!important;outline-offset:3px!important;}
+@media(prefers-reduced-motion:reduce){.tbk-switch-thumb{transition:none!important;}}
+
+.tbk-window-surface{background-color:var(--tbk-window-bg)!important;color:var(--tbk-window-fg)!important;backdrop-filter:var(--tbk-window-filter)!important;box-shadow:inset 0 1px 1px rgba(255,255,255,var(--tbk-window-highlight)),0 8px 24px #0004!important;}
+.tbk-window-surface .tbk-window-clear{background-color:transparent!important;}
+.tbk-chat-root .chat-line__message,.tbk-chat-root .chat-line__status{color:var(--tbk-chat-text)!important;}
+.tbk-chat-root .chat-line__message .text-fragment,.tbk-chat-root .video-chat__message-list .text-fragment{color:var(--tbk-chat-text)!important;}
+.tbk-window-surface{--tbk-chat-text:var(--tbk-window-fg);}
+.tbk-chat-root .stream-chat-header h1,.tbk-chat-root .stream-chat-header h2,.tbk-chat-root .stream-chat-header h3,.tbk-chat-root .stream-chat-header h4,.tbk-chat-root .stream-chat-header .tw-title{color:var(--tbk-chat-text)!important;}

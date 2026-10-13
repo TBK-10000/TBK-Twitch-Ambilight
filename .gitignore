@@ -1,0 +1,14 @@
+dist/
+node_modules/
+__pycache__/
+*.pyc
+*.log
+.env
+.env.*
+artifacts/
+**/profile*/
+**/test-profile-*/
+**/smoke-profile-*/
+developer/*-results.json
+developer/results.json
+developer/*.png

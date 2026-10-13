@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "node unit.cjs && node settings-v3.cjs",
+    "test:browser": "node browser.cjs",
+    "test:v3": "node browser-v3.cjs",
+    "test:surfaces": "node surfaces.cjs",
+    "test:chat": "node chat-stacking.cjs",
+    "test:chat-header": "node chat-header.cjs",
+    "test:live": "node live-probe.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1",
+    "pngjs": "7.0.0"
+  },
+  "license": "MIT",
+  "author": "TheBigKotovski (TBK)"
+}
