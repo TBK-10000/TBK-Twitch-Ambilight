@@ -4,7 +4,7 @@ const root='../';const tests=[];
 const memory={},changes=new Set(),frames=new Map();let serial=0,now=1000;
 class Element extends EventTarget{
  constructor(tag='div'){super();this.tagName=tag.toUpperCase();this.style={setProperty(k,v){this[k]=v;},getPropertyValue(k){return this[k]||'';},removeProperty(k){delete this[k];}};this.children=[];this.width=96;this.height=54;this.hidden=false;this.isConnected=true;this.attrs={};this.classes=new Set();this.classList={add:(...v)=>v.forEach(x=>this.classes.add(x)),remove:(...v)=>v.forEach(x=>this.classes.delete(x)),contains:v=>this.classes.has(v)};}
- querySelectorAll(){return this.candidates||[];}
+ querySelectorAll(selector){if(selector==='.community-highlight,.community-highlight-stack__backlog-card')return (this.candidates||[]).filter(el=>el.classList.contains('community-highlight')||el.classList.contains('community-highlight-stack__backlog-card'));return this.candidates||[];}
  prepend(el){el.remove();this.children.unshift(el);el.parentElement=this;}
  toDataURL(){return 'data:image/png;base64,fixture';}
  setAttribute(k,v){this.attrs[k]=v;}

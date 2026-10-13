@@ -14,6 +14,13 @@
 .tbk-chat-backdrop canvas{position:absolute!important;left:-15%!important;top:-15%!important;width:130%!important;height:130%!important;max-width:none!important;max-height:none!important;}
 .tbk-chat-tint,.tbk-chat-grain{position:absolute!important;inset:0!important;pointer-events:none!important;}
 .tbk-chat-grain{background-repeat:repeat!important;}
+/* Notice cards share chat effects over an opaque base, never over messages. */
+.tbk-chat-root .tbk-chat-notice{isolation:isolate!important;background-color:var(--tbk-chat-notice-bg)!important;background-image:none!important;color:var(--tbk-chat-text)!important;--color-text-base:var(--tbk-chat-text);--color-text-alt:var(--tbk-chat-text);--color-text-alt-2:var(--tbk-chat-text);backdrop-filter:none!important;}
+.tbk-chat-notice-position{position:relative!important;}
+.tbk-chat-notice-backdrop{border-radius:inherit!important;}
+.tbk-chat-root .tbk-chat-notice .tbk-chat-notice-clear{background-color:transparent!important;}
+.tbk-chat-root .tbk-chat-notice .pinned-chat__message{color:var(--tbk-chat-text)!important;}
+.tbk-chat-root .tbk-chat-notice button[class*="ScButtonIcon-"]{color:var(--tbk-chat-text)!important;}
 /* Native text/buttons are painted over this negative local background layer. */
 .tbk-foreground-surface{isolation:isolate!important;}
 .tbk-foreground-position{position:relative!important;}
@@ -54,4 +61,5 @@
 .tbk-chat-root .chat-line__message,.tbk-chat-root .chat-line__status{color:var(--tbk-chat-text)!important;}
 .tbk-chat-root .chat-line__message .text-fragment,.tbk-chat-root .video-chat__message-list .text-fragment{color:var(--tbk-chat-text)!important;}
 .tbk-window-surface{--tbk-chat-text:var(--tbk-window-fg);}
+.tbk-sidebar-preview{--color-background-float:var(--tbk-window-bg);--color-text-base:var(--tbk-window-fg);--color-text-alt:var(--tbk-window-fg);--color-text-alt-2:var(--tbk-window-fg);}
 .tbk-chat-root .stream-chat-header h1,.tbk-chat-root .stream-chat-header h2,.tbk-chat-root .stream-chat-header h3,.tbk-chat-root .stream-chat-header h4,.tbk-chat-root .stream-chat-header .tw-title{color:var(--tbk-chat-text)!important;}

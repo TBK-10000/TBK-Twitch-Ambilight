@@ -7,6 +7,8 @@
     "test:surfaces": "node surfaces.cjs",
     "test:chat": "node chat-stacking.cjs",
     "test:chat-header": "node chat-header.cjs",
+    "test:chat-notices": "node chat-notices.cjs",
+    "test:sidebar-preview": "node sidebar-preview.cjs",
     "test:live": "node live-probe.cjs"
   },
   "devDependencies": {

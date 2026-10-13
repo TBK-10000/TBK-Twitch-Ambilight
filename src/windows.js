@@ -2,8 +2,14 @@
 (() => {
   // chat-room__viewer-card is a permanent full-size overlay host, even when
   // no card is open. Paint the actual card inside it, never the empty host.
-  const selectors='[role="dialog"],[role="menu"],[role="tooltip"],.viewer-card,.chat-announcement,.chat-viewers,[data-a-target="viewer-card"],[data-a-target="chat-user-card"],[data-a-target="user-card"],[data-a-target="chat-viewers-list"],[data-a-target="player-settings-menu"],[data-test-selector="chat-announcement"],.tw-balloon';
+  const selectors='[role="dialog"],[role="menu"],[role="tooltip"],.viewer-card,.chat-announcement,.chat-viewers,.community-highlight,.community-highlight-stack__backlog-card,[data-a-target="viewer-card"],[data-a-target="chat-user-card"],[data-a-target="user-card"],[data-a-target="chat-viewers-list"],[data-a-target="player-settings-menu"],[data-test-selector="chat-announcement"],.tw-balloon';
   const protectedElements='button,a,input,textarea,select,[role="button"],[role="slider"],.tbk-ambilight-ui';
+  const previewSelector='.online-side-nav-channel-tooltip__body';
+  const previewHost=el=>{
+    if(!el.matches('.react-modal__content'))return false;
+    if(el.querySelector(previewSelector))return true;
+    const box=el.getBoundingClientRect();return !box.width||!box.height;
+  };
   class WindowSurfaces {
     constructor(){this.entries=new Map();this.id='tbk-glass-'+Math.random().toString(36).slice(2);}
     filter(){
@@ -22,14 +28,27 @@
     }
     reconcile(s){
       if(!s.enabled){this.destroy();return;}
+      // Sidebar previews are positioned inside an empty React dialog portal.
+      // Release the old host before reading native backgrounds of its children.
+      for(const[el,entry]of this.entries)if(previewHost(el)){this.release(el,entry);this.entries.delete(el);}
+      const previewPanels=new Set();
+      for(const body of document.querySelectorAll(previewSelector)){
+        const host=body.closest('.react-modal__content');let panel=body;
+        for(let node=body;host&&node&&node!==host;node=node.parentElement){
+          const rgb=getComputedStyle(node).backgroundColor.match(/[\d.]+/g)?.map(Number);
+          if(rgb&&rgb.length>=3&&(rgb.length<4||rgb[3]>0)){panel=node;break;}
+        }
+        previewPanels.add(panel);
+      }
       // The host can also match data-a-target="viewer-card"; excluding just
       // its class from selectors is insufficient. Keep actual children eligible.
-      const candidates=[...document.querySelectorAll(selectors)].filter(el=>!el.classList.contains('chat-room__viewer-card')&&!el.closest('.tbk-ambilight-ui,.tbk-glass-filter'));
+      const candidates=[...new Set([...document.querySelectorAll(selectors),...previewPanels])].filter(el=>!el.classList.contains('chat-room__viewer-card')&&!el.classList.contains('tbk-chat-notice')&&!previewHost(el)&&!el.closest('.tbk-ambilight-ui,.tbk-glass-filter'));
       const selected=new Set(candidates.filter(el=>!candidates.some(parent=>parent!==el&&parent.contains(el))));
       for(const[el,entry]of this.entries)if(!selected.has(el)||!el.isConnected){this.release(el,entry);this.entries.delete(el);}
       const glass=s.windowStyle!=='native';
       if(s.windowStyle==='refract'){this.filter();this.displacement.setAttribute('scale',String(s.windowRefraction));}
       for(const el of selected){
+        if(previewPanels.has(el)){if(!el.classList.contains('tbk-sidebar-preview'))el.classList.add('tbk-sidebar-preview');}else if(el.classList.contains('tbk-sidebar-preview'))el.classList.remove('tbk-sidebar-preview');
         let entry=this.entries.get(el);
         if(!entry){
           entry={clear:new Set(),original:new Map()};this.entries.set(el,entry);
@@ -57,7 +76,7 @@
         }
       }
     }
-    release(el,entry){el.classList.remove('tbk-window-surface');for(const node of entry.clear)node.classList.remove('tbk-window-clear');for(const[k,[v,priority]]of entry.original){if(v)el.style.setProperty(k,v,priority);else el.style.removeProperty(k);}}
+    release(el,entry){el.classList.remove('tbk-window-surface','tbk-sidebar-preview');for(const node of entry.clear)node.classList.remove('tbk-window-clear');for(const[k,[v,priority]]of entry.original){if(v)el.style.setProperty(k,v,priority);else el.style.removeProperty(k);}}
     destroy(){for(const[el,entry]of this.entries)this.release(el,entry);this.entries.clear();this.svg?.remove();this.svg=null;this.displacement=null;}
   }
   TBK.WindowSurfaces=WindowSurfaces;TBK.windowSelectors=selectors;

@@ -1,6 +1,6 @@
 # TBK Twitch Ambilight
 
-**[Скачать / Download](https://github.com/TBK-10000/TBK-Twitch-Ambilight/releases/latest)** · Версия / Version **3.0.2** · Opera GX / Google Chrome · MIT
+**[Скачать / Download](https://github.com/TBK-10000/TBK-Twitch-Ambilight/releases/latest)** · Версия / Version **3.0.5** · Opera GX / Google Chrome · MIT
 
 ## Русский
 
@@ -11,7 +11,8 @@
 - Шесть эффектов подсветки: классический, мягкое свечение, направленное свечение, растекание цвета, световые лучи и волны.
 - Настройка цвета, яркости, размытия и скорости движения эффекта.
 - Оформление чата и верхней карусели с общим фоном и читаемым текстом.
-- Читаемые всплывающие окна с обычным оформлением, матовым стеклом или стеклом с преломлением.
+- Читаемые всплывающие окна и предпросмотр боковых каналов с обычным оформлением, матовым стеклом или стеклом с преломлением.
+- Drops и закреплённые сообщения используют общий стиль чата с плотной основой для читаемости.
 - Экономичный режим с возвратом прежних настроек после выключения.
 - Именованные пресеты с автосохранением, копированием и вставкой; импорт и экспорт настроек.
 - Переключатель ON/OFF и кнопка настроек рядом с элементами управления плеером.
@@ -19,7 +20,7 @@
 
 ### Установка
 
-1. Откройте [последний выпуск](https://github.com/TBK-10000/TBK-Twitch-Ambilight/releases/latest) и скачайте из **Assets** архив для своего браузера: **TBK-Twitch-Ambilight-v3.0.2-opera-gx.zip** или **TBK-Twitch-Ambilight-v3.0.2-chrome.zip**.
+1. Откройте [последний выпуск](https://github.com/TBK-10000/TBK-Twitch-Ambilight/releases/latest) и скачайте из **Assets** архив для своего браузера: **TBK-Twitch-Ambilight-v3.0.5-opera-gx.zip** или **TBK-Twitch-Ambilight-v3.0.5-chrome.zip**.
 2. Распакуйте архив в постоянную папку на компьютере.
 3. Откройте `opera://extensions` в Opera GX или `chrome://extensions` в Chrome и включите **Режим разработчика**.
 4. Нажмите **Загрузить распакованное расширение** и выберите папку **TBK-Twitch-Ambilight**, в которой находится `manifest.json`.
@@ -58,7 +59,8 @@ An extension for Opera GX and Google Chrome that adds dynamic ambient lighting a
 - Six lighting effects: classic, soft glow, directional glow, color flow, light rays, and waves.
 - Adjustable color, brightness, blur, and effect motion speed.
 - A shared background for chat and its header carousel, with readable text.
-- Readable pop-up panels with standard, frosted glass, or refractive glass styling.
+- Readable pop-up panels and sidebar channel previews with standard, frosted glass, or refractive glass styling.
+- Drops and pinned messages share the chat style over a dense background for readability.
 - An economy mode that restores your previous settings when disabled.
 - Named presets with autosave, copy and paste, plus settings import and export.
 - An ON/OFF switch and a settings button beside the player controls.
@@ -66,7 +68,7 @@ An extension for Opera GX and Google Chrome that adds dynamic ambient lighting a
 
 ### Installation
 
-1. Open the [latest release](https://github.com/TBK-10000/TBK-Twitch-Ambilight/releases/latest) and download the ZIP for your browser under **Assets**: **TBK-Twitch-Ambilight-v3.0.2-opera-gx.zip** or **TBK-Twitch-Ambilight-v3.0.2-chrome.zip**.
+1. Open the [latest release](https://github.com/TBK-10000/TBK-Twitch-Ambilight/releases/latest) and download the ZIP for your browser under **Assets**: **TBK-Twitch-Ambilight-v3.0.5-opera-gx.zip** or **TBK-Twitch-Ambilight-v3.0.5-chrome.zip**.
 2. Extract the archive to a permanent folder on your computer.
 3. Open `opera://extensions` in Opera GX or `chrome://extensions` in Chrome and enable **Developer mode**.
 4. Click **Load unpacked** and select the **TBK-Twitch-Ambilight** folder containing `manifest.json`.

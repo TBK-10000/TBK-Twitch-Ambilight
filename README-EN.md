@@ -1,6 +1,6 @@
-# TBK Twitch Ambilight 3.0.2
+# TBK Twitch Ambilight 3.0.5
 
-An extension for Opera GX that adds dynamic ambient lighting around Twitch videos, chat styling, and readable pop-up panels. Version 3.0.2 is a regular release for manual installation. The Russian instructions are in README-RU.md.
+An extension for Opera GX that adds dynamic ambient lighting around Twitch videos, chat styling, and readable pop-up panels. Version 3.0.5 fixes the background and title contrast of sidebar channel previews. Previews use the shared window settings; select matte or refracting glass for a translucent background. Drops and pinned messages retain the chat's colour and effects over an opaque base. The Russian instructions are in README-RU.md.
 
 ## Installation and updates
 

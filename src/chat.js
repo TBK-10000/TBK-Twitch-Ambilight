@@ -1,10 +1,11 @@
 /* Chat backdrop uses the existing decoded frame; no second video/readback loop. */
 (() => {
   const roots=['.stream-chat','.chat-room','[data-a-target="chat-room-component"]','.video-chat'];
+  const notices='.community-highlight,.community-highlight-stack__backlog-card';
   const surfaces=['.chat-scrollable-area__message-container','.chat-list--default','.chat-list','.chat-input','.stream-chat-header','.chat-room__content','.chat-room__content-wrapper','.video-chat__message-list','[data-a-target="chat-scroller"]','[data-test-selector="chat-scrollable-area__message-container"]'];
   class ChatBackdrop {
     constructor(){
-      this.surfaces=new Set();this.widgetSurfaces=new Set();this.widgetRoots=new Set();this.lastTime=0;
+      this.surfaces=new Set();this.widgetSurfaces=new Set();this.widgetRoots=new Set();this.notices=new Map();this.lastTime=0;
       this.layer=document.createElement('div');this.layer.className='tbk-chat-backdrop';this.layer.setAttribute('aria-hidden','true');
       this.canvas=document.createElement('canvas');this.canvas.width=12;this.canvas.height=32;this.ctx=this.canvas.getContext('2d');
       this.tint=document.createElement('div');this.tint.className='tbk-chat-tint';
@@ -28,6 +29,7 @@
       for(const el of this.surfaces)el.classList.remove('tbk-chat-surface');
       for(const el of this.widgetSurfaces)el.classList.remove('tbk-chat-widget-surface');
       for(const el of this.widgetRoots)el.classList.remove('tbk-chat-widget-root');
+      for(const[el,entry]of this.notices)this.releaseNotice(el,entry);this.notices.clear();
       this.widgetRoots.clear();this.widgetSurfaces.clear();this.surfaces.clear();this.root=null;
     }
     reconcile(s){
@@ -53,6 +55,9 @@
       for(const content of root.querySelectorAll('.chat-room__content'))for(const group of content.children){
         if(group.matches(scrollers)||group.querySelector(scrollers))break;
         if(group.matches('.chat-input,.chat-room__viewer-card,.chat-room__notifications')||group.closest(excluded))continue;
+        // Community notices use the same transition wrapper as the leaderboard,
+        // but overlay messages: their card background and contrast must survive.
+        if(group.matches('.community-highlight')||group.querySelector('.community-highlight,.community-highlight-stack__card'))continue;
         if(!group.querySelector('.tw-transition-group,[data-test-selector="leaderboard-item-name-test-selector"],[class*="channelLeaderboardHeader"]'))continue;
         widgetRoots.add(group);
         for(const node of [group,...group.querySelectorAll('div,section,header,article')]){widgetCandidates.add(node);carouselNodes.add(node);}
@@ -79,6 +84,48 @@
       this.underLuma=this.backgroundLuma();
       this.textContrast(s,this.lastLuma??.5);
       this.grain.style.opacity=String(s.chatGrain/100*.3);
+      this.reconcileNotices(s);
+    }
+    reconcileNotices(s){
+      const selected=new Set(this.root.querySelectorAll(notices));
+      for(const[el,entry]of this.notices)if(!selected.has(el)){this.releaseNotice(el,entry);this.notices.delete(el);}
+      for(const el of selected){
+        let entry=this.notices.get(el);
+        if(!entry){
+          const layer=this.layer.cloneNode(true),canvas=layer.querySelector('canvas');
+          layer.classList.add('tbk-chat-notice-backdrop');
+          entry={layer,canvas,ctx:canvas.getContext('2d'),clear:new Set(),original:new Map()};this.notices.set(el,entry);
+        }
+        if(!el.classList.contains('tbk-chat-notice'))el.classList.add('tbk-chat-notice');
+        if(getComputedStyle(el).position==='static')el.classList.add('tbk-chat-notice-position');
+        if(entry.layer.parentElement!==el)el.prepend(entry.layer);
+        for(const key of ['--tbk-chat-notice-bg','--tbk-chat-text'])if(!entry.original.has(key))entry.original.set(key,[el.style.getPropertyValue(key),el.style.getPropertyPriority(key)]);
+        const set=(key,value)=>{if(el.style.getPropertyValue(key)!==value)el.style.setProperty(key,value);};
+        // An opaque base blocks messages underneath even with zero chat opacity.
+        set('--tbk-chat-notice-bg',s.chatColor);set('--tbk-chat-text',this.noticeText(s,this.lastLuma??.5));
+        entry.canvas.style.cssText=this.canvas.style.cssText;
+        entry.layer.querySelector('.tbk-chat-tint').style.cssText=this.tint.style.cssText;
+        entry.layer.querySelector('.tbk-chat-grain').style.cssText=this.grain.style.cssText;
+        for(const node of entry.clear)if(!el.contains(node)){node.classList.remove('tbk-chat-notice-clear');entry.clear.delete(node);}
+        for(const node of el.querySelectorAll('div,section,header,article')){
+          if(node.closest('button,a,input,textarea,select,[role="button"],[role="progressbar"],[role="dialog"],[role="menu"],[role="tooltip"],.tw-balloon,.highlight__progress-bar,.tbk-chat-notice-backdrop'))continue;
+          if(entry.clear.has(node)){if(!node.classList.contains('tbk-chat-notice-clear'))node.classList.add('tbk-chat-notice-clear');continue;}
+          const style=getComputedStyle(node),rgb=style.backgroundColor?.match(/[\d.]+/g)?.map(Number);
+          if(rgb&&rgb.length>=3&&Math.max(...rgb.slice(0,3))-Math.min(...rgb.slice(0,3))<20&&style.backgroundImage==='none'){node.classList.add('tbk-chat-notice-clear');entry.clear.add(node);}
+        }
+        this.drawNotice(entry);
+      }
+    }
+    drawNotice(entry){entry.ctx.clearRect(0,0,12,32);entry.ctx.drawImage(this.canvas,0,0);}
+    noticeText(s,luma){
+      const rgb=s.chatColor.match(/\w\w/g).map(x=>parseInt(x,16)),tint=(rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722)/255;
+      const alpha=s.chatOpacity/100,source=s.chatIntensity/100;
+      return tint*alpha+(luma*source+tint*(1-source))*(1-alpha)>.46?'#18181b':'#efeff1';
+    }
+    releaseNotice(el,entry){
+      entry.layer.remove();el.classList.remove('tbk-chat-notice','tbk-chat-notice-position');
+      for(const node of entry.clear)node.classList.remove('tbk-chat-notice-clear');
+      for(const[key,[value,priority]]of entry.original){if(value)el.style.setProperty(key,value,priority);else el.style.removeProperty(key);}
     }
     draw(source,s,now){
       if(!s.chatEnabled||!this.root||now-this.lastTime<1000/15)return;
@@ -88,6 +135,8 @@
       const blendAlpha=this.ctx.globalAlpha;this.ctx.drawImage(source,source.width-edge,0,edge,source.height,0,0,12,32);
       this.ctx.globalAlpha=1;this.lastTime=now;
       const target=s.frameLuma??.5;this.lastLuma=this.lastLuma===undefined?target:this.lastLuma+(target-this.lastLuma)*blendAlpha;this.textContrast(s,this.lastLuma);
+      const text=this.noticeText(s,this.lastLuma);
+      for(const[el,entry]of this.notices){this.drawNotice(entry);if(el.style.getPropertyValue('--tbk-chat-text')!==text)el.style.setProperty('--tbk-chat-text',text);}
     }
     backgroundLuma(){
       let result=0,remaining=1;

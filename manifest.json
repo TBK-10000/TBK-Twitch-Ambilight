@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TBK Twitch Ambilight",
-  "version": "3.0.2",
+  "version": "3.0.5",
   "description": "Подсветка Twitch с настройками внутри плеера. Отдельная модульная версия TBK.",
   "permissions": [
     "storage"

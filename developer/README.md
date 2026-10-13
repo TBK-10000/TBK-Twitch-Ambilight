@@ -20,3 +20,5 @@ Use `TBK_TEST_OUTPUT` for disposable evidence/profile directories, `TBK_EXTENSIO
 На GitHub Actions проверяются логика, настройки, CSS/пиксельные регрессии, настоящее MV3 на тестовых страницах и установка обоих ZIP. Записи запусков, снимки, профили и диагностические JSON не включаются в исходники и установочные архивы. Проверки живого Twitch и визуальная оценка выполняются отдельно.
 
 Build ZIPs from the repository root with `python3 scripts/build_release.py`. No runtime npm dependency is bundled. Licenses and upstream attribution are retained; see the root LICENSE and THIRD-PARTY-NOTICES.md.
+
+Version 3.0.5 adds node chat-notices.cjs (13 CSS/pixel scenarios) and node sidebar-preview.cjs (10 scenarios). They cover readable chat-style notices, hover preview glass, late native CSS, theme changes, dynamic replacement and complete cleanup.
